@@ -1,3 +1,5 @@
+*정렬 알고리즘
+
 #include <iostream>
 
 void Print(int input[], int count)
@@ -24,3 +26,58 @@ int main()
 
 	Print(array, ARRAY);
 }
+_________________________________________________________
+//Sequentia Sort
+// Time Complexity: O(n^2)
+//Space Complexity : O(n) 
+void SequentiaSort(int input[], int size)
+{
+	for(int i=0; i< size-1; i++)
+	{
+		for(int j=i+1; j<size; j++)
+		{
+			if(input[i]>input[j])
+			{
+				Swap(input[i], input[j]);
+			}
+		}
+	}
+}
+_________________________________________________________
+//Selection Sort
+// Time Complexity: O(n^2)
+// Space Complexity : O(n)
+void SelectionSort(int input[], int size)
+{
+	for(int i=0; i < size; i++)
+	{
+		int minIndex = i;
+		for(int j=i; j < size; j++)
+		{
+			if(input[minIndex] > input[j])
+			{
+				minIndex = j;
+			}
+		}
+		Swap(input[i], input[minIndex]);
+	}
+}
+_________________________________________________________
+//Bubble Sort
+// Time Complexity: O(n^2)
+// Space Complexity : O(n)
+void BubbleSort(int input[], int size)
+{
+	for(int i=0; i < size; i++)
+	{
+		for(int j=0; j < size - i - 1; j++)
+		{
+			if (input[j] > input[j + 1])
+			{
+				Swap(input[j], input[j + 1]);
+			}
+		}
+	}
+}
+
+
