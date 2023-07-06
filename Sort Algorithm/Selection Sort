@@ -1,5 +1,6 @@
-#include <iostream>
-
+#include <iostream>                                 //Selection Sort
+                                                    // Time Complexity: O(n^2)
+                                                    // Space Complexity : O(n)
 void Print(int input[], int count)
 {
     for (int i = 0; i < count; i++)
