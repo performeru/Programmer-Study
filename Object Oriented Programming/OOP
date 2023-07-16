@@ -1,1 +1,31 @@
+#include <iostream>
 
+class Computer
+{
+public:
+	int Price;
+	int Color;
+
+private:
+	int Power;
+	std::string Main_board;
+
+	void Power_Indication()
+	{
+		return;
+	}
+public:
+	void Price_Indication()
+	{
+		std::cout << "가격은 " << this->Price << std::endl;
+	}
+};
+
+int main()
+{
+	Computer computer;
+
+	computer.Price = 20;
+
+	computer.Price_Indication();
+}
