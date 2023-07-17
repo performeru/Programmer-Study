@@ -1,31 +1,47 @@
 #include <iostream>
 
-class Computer
+
+class Point 
 {
-public:
-	int Price;
-	int Color;
-
 private:
-	int Power;
-	std::string Main_board;
+    double x;
+    double y;
 
-	void Power_Indication()
-	{
-		return;
-	}
 public:
-	void Price_Indication()
-	{
-		std::cout << "가격은 " << this->Price << std::endl;
-	}
+    Point(double xCoord, double yCoord);
+
+    double DistanceFromOrigin() const;
+
+    void PrintCoordinates() const;
 };
 
-int main()
+Point::Point(double xCoord, double yCoord) 
 {
-	Computer computer;
+    x = xCoord;
+    y = yCoord;
+}
 
-	computer.Price = 20;
+double Point::DistanceFromOrigin() const
+{
+    return sqrt(x * x + y * y);
+}
 
-	computer.Price_Indication();
+void Point::PrintCoordinates() const 
+{
+    std::cout << "(" << x << ", " << y << ")" << std::endl;
+}
+
+int main() 
+{
+    double x{}, y{};
+    std::cout << "Enter x coordinate: ";
+    std::cin >> x;
+    std::cout << "Enter y coordinate: ";
+    std::cin >> y;
+    
+    Point p(x, y);
+    std::cout << "Distance from origin: " << p.DistanceFromOrigin() << std::endl;
+    p.PrintCoordinates();
+
+    return 0;
 }
