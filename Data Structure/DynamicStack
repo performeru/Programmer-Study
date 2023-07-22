@@ -2,14 +2,14 @@
 
 struct Element
 {
-    int value;
-    Element* pNext;
+    int value{};
+    Element* pNext{};
 };
 
 struct Stack
 {
-    Element* pTop;
-    int count;
+    Element* pTop{};
+    int count{};
 };
 
 void Push(Stack& stack, int value)
