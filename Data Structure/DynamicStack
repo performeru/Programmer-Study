@@ -46,6 +46,7 @@ void Print(Stack& stack)
         std::cout << pElement->value << std::endl;
         pElement = pElement->pNext;
     }
+    std::cout << "----------" << std::endl;
 }
 
 void DeleteAll(Stack& stack)
