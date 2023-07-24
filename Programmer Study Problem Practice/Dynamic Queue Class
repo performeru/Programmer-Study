@@ -1,6 +1,6 @@
 #include <iostream>
 
-class Queue
+class DynamicQueuekManger
 {
 private:
     struct Element
@@ -9,12 +9,12 @@ private:
         Element* pNext{};
     };
 
-    Element* pFront{};
-    Element* pRear{};
-    int count{};
+    Element* mpFront{};
+    Element* mpRear{};
+    int mCount{};
 
 public:
-    Queue() : pFront(nullptr), pRear(nullptr), count(0) {}
+    class DynamicQueuekManger() : mpFront(nullptr), mpRear(nullptr), mCount(0) {}
 
     void Enqueue(int value)
     {
@@ -22,38 +22,38 @@ public:
         pElement->value = value;
         pElement->pNext = nullptr;
 
-        if (count == 0)
+        if (mCount == 0)
         {
-            pFront = pElement;
-            pRear = pElement;
+            mpFront = pElement;
+            mpRear = pElement;
         }
         else
         {
-            pRear->pNext = pElement;
-            pRear = pElement;
+            mpRear->pNext = pElement;
+            mpRear = pElement;
         }
 
-        count++;
+        mCount++;
     }
 
     void Dequeue()
     {
-        if (count == 0)
+        if (mCount == 0)
         {
             std::cout << "QUEUE IS EMPTY" << std::endl;
             return;
         }
 
-        Element* pFrontElement = pFront;
-        pFront = pFrontElement->pNext;
-        count--;
+        Element* pFrontElement = mpFront;
+        mpFront = pFrontElement->pNext;
+        mCount--;
 
         delete pFrontElement;
     }
 
     void Print()
     {
-        Element* pElement = pFront;
+        Element* pElement = mpFront;
 
         while (pElement)
         {
@@ -65,7 +65,7 @@ public:
 
     void DeleteAll()
     {
-        Element* pElement = pFront;
+        Element* pElement = mpFront;
         Element* pNext;
 
         while (pElement)
@@ -75,26 +75,25 @@ public:
             pElement = pNext;
         }
 
-        count = 0;
-        pFront = nullptr;
-        pRear = nullptr;
+        mCount = 0;
+        mpFront = nullptr;
+        mpRear = nullptr;
     }
 };
 
 int main()
 {
-    Queue queue;
+    DynamicQueuekManger Queue;
 
-    queue.Enqueue(30);
-    queue.Enqueue(20);
-    queue.Enqueue(10);
-    queue.Print();
+    Queue.Enqueue(30);
+    Queue.Enqueue(20);
+    Queue.Enqueue(10);
+    Queue.Print();
 
-    queue.Dequeue();
-    queue.Print();
+    Queue.Dequeue();
+    Queue.Print();
 
-    queue.DeleteAll();
-    queue.Print();
+    Queue.DeleteAll();
+    Queue.Print();
 
-    return 0;
 }
