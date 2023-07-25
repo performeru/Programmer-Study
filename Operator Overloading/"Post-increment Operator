@@ -2,9 +2,9 @@
 
 class Point2D
 {
-  private:
-     int mX;
-     int mY;
+    private:
+    int mX;
+    int mY;
 
   public:
      Point2D();
