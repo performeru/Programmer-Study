@@ -1,1 +1,61 @@
+#include <iostream>
 
+class String
+{
+private:
+    char* mData;
+
+public:
+    String() : mData(nullptr) {}
+
+    String(size_t size)
+    {
+        mData = new char[size + 1];
+        for(size_t i=0; i<size; i++)
+        {
+            mData[i] = ' ';
+        }
+        mData[size] = '\0';
+    }
+
+    String(const char* string)
+    {
+        size_t len = 0;
+        while (string[len]!='\0')
+        {
+            len++;
+            mData = new char[len = 1];
+            for(size_t i=0; i<len; i++)
+            {
+                mData[i] = string[i];
+            }
+            mData[len] = '\0';
+        }
+    }
+
+    String(const String& other)
+    {
+        size_t len = 0;
+        while (other.mData[len] != '\0')
+        {
+            len++;
+            mData = new char[len + 1];
+            for (size_t i = 0; i < len; i++)
+            {
+                
+            }
+        
+        }
+    }
+
+
+
+
+};
+
+int main()
+{
+    
+
+
+}
