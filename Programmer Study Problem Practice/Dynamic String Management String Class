@@ -48,6 +48,31 @@ public:
         }
     }
 
+    ~String()
+    {
+        delete[] mData;
+    }
+
+    String& operator=(const String& other)
+    {
+        if(this != &other)
+        {
+            size_t len = 0;
+            while(other.mData[len] != '\0')
+            {
+                len++;
+                delete[] mData;
+                mData = new char[len + 1];
+                for(size_t i=0; i<len; i++)
+                {
+                    mData[i] = other.mData[i];
+                }
+                mData[len] = '\0';
+            }
+        }
+        return *this;
+    }
+
 
 
 
