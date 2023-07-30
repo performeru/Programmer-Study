@@ -80,7 +80,8 @@ public:
 
 int main()
 {
-    
+    String empty;
+    String sized(10);
 
 
 }
