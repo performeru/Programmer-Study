@@ -19,6 +19,6 @@ public:
 	Dog::BREED GetBreed() const;
 	void SetBreed(BREED breed);
 
-	void bark();
+	void Bark();
 
 };
