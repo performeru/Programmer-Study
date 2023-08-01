@@ -21,7 +21,7 @@ void Dog::SetBreed(BREED breed)
     mBreed = breed;
 }
 
-void Dog::bark()
+void Dog::Bark()
 {
-    std::cout << "bark" << std::endl;
+    std::cout << "Bark" << std::endl;
 }
