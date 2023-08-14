@@ -4,8 +4,6 @@
 #include <forward_list>
 #include <list>
 #include <deque>
-
-
 using namespace std;
 
 void ArrayEx()
