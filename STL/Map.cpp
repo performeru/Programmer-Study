@@ -2,7 +2,7 @@
 #include <map>
 using namespace std;
 
-void Mapex()
+void MapEx()
 {
 	struct Student
 	{
