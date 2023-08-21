@@ -6,9 +6,9 @@ using namespace std;
 class Students
 {
 public:
-	int mNumber;
-	string mName;
-	int mScore;
+	int mNumber{};
+	string mName{};
+	int mScore{};
 
 public:
 	void Print() const
@@ -56,20 +56,17 @@ void RemoveStudent(vector<Students>& v)
 
 void PrintStudnet(vector<Students>& v)
 {
-	for(const auto& e : v)
-	{
-		e.Print();
-	}
+	for_each(v.begin(), v.end(), [](const auto& e) {e.Print(); });
 }
 
 void PrintAverage(vector<Students>& v)
 {
 	int total{};
 
-	for(const auto& e : v)
+	total = accumulate(v.begin(), v.end(), 0, [](int accum, const auto& e) 
 	{
-		total += e.mScore;
-	}
+		return accum += e.mScore;
+	});
 
 	cout << "총점 : " << total << ", 평균 : " << total / v.size() << endl;
 }
@@ -85,14 +82,15 @@ void PrintOverAverage(vector<Students>& v)
 
 	int average = total / static_cast<int>(v.size());
 
-	for(const auto& e : v)
-	{
-		if(e.mScore >= average)
+	for_each(v.begin(), v.end(), [&](const auto& e) 
 		{
-			e.Print();
-		}
-	}
+			if (e.mScore >= average)
+			{
+				e.Print();
+			}
+		});
 }
+
 
 void Ex4()
 {
