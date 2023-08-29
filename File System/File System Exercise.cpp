@@ -1,10 +1,3 @@
-#include <iostream>
-#include <fstream>
-#include <vector>
-#include <sstream>
-using namespace std;
-
-
 class Monster
 {
 private:
@@ -16,6 +9,11 @@ private:
 public:
     Monster() = default;
     Monster(string name, int level, int hp, int mp) : mName{ name }, mLevel{ level }, mHP{ hp }, mMP{ mp } {}
+
+    string GetName() const { return mName; }
+    int GetLevel() const { return mLevel; }
+    int GetHP() const { return mHP; }
+    int GetMP() const { return mMP; }
 
     friend ostream& operator << (ostream& os, const Monster& m)
     {
@@ -58,13 +56,16 @@ bool LoadFile(const string& filename, vector<Monster>& monsters)
 
         string line;
 
-        getline(ifs, line); // 첫 줄 제거
+        getline(ifs, line); 
 
-        while (!ifs.eof())
+        while (getline(ifs, line)) 
         {
             Monster m;
-            ifs >> m;
-            monsters.push_back(m);
+            istringstream iss(line);
+            iss >> m;
+
+            if (!m.GetName().empty())  
+                monsters.push_back(m);
         }
 
         ifs.close();
@@ -110,18 +111,26 @@ int main()
 {
     vector<Monster> monsters;
 
-    monsters.push_back(Monster("ORC", 15, 15, 15));
-
-    if (SaveFile("C:\\Study\\lesson\\FileSystem\\Data\\Simple_copy.txt", monsters))
+    if (LoadFile("C:\\Study\\lesson\\FileSystem\\Data\\Simple.txt", monsters))
     {
-        cout << "Copy File saved successfully." << endl;
+        monsters.push_back(Monster("Orc", 15, 15, 15));
+
+        if (SaveFile("C:\\Study\\lesson\\FileSystem\\Data\\Simple.txt", monsters) &&
+            SaveFile("C:\\Study\\lesson\\FileSystem\\Data\\Simple_copy.txt", monsters))
+        {
+            cout << "Files saved successfully." << endl;
+        }
+        else
+        {
+            cout << "Failed to save the files." << endl;
+        }
     }
     else
     {
-        cout << "Failed to save the copy file." << endl;
+        cout << "Failed to load the original file." << endl;
     }
-
 
     return 0;
 }
+
 
