@@ -1,52 +1,49 @@
-- Source Code
-- Object Code
-- Compile
-- Link
-- Build
-- Library
-- IDE(Integrated Development Environment)
-- Function
-- Error
-- main()
-- Solution
-- Project
-
-
-
-Source Code
+# Source Code
 *.cpp나 *.h와 같이 프로그래밍 언어로 작성한 텍스트 파일
+___
 
-Object Code
+# Object Code
 *.obj나 *.o와 같이 컴퓨터가 이해할 수 있는 기계어나 혹은 그에 준하는 언어로 구성된 파일
+___
 
-Compile
+# Compile
 소스코드에서 목적코드로 변환하는 과정으로 이를 처리하는 도구를 컴파일러라고 부른다. 
+___
 
-Link
+# Link
 목적 파일과 라이브러리 파일, 시동 코드들을 모두 연결하여 하나의 실행 파일을 만드는 과정
+___
 
-Build
+# Build
 컴파일 과정과 링크 과정을 합쳐 부르 말
+___
 
-Library
+# Library
 미리 작성해 놓은 코드들로 쉽고 간단하게 사용할 수 있게 만들어 줌, 소스 파일을 컴파일한 기계어 상태로 제공해서 배포하는 용도로 사용하기도 한다.
+___
 
-IDE(Integrated Development Environment)
+# IDE(Integrated Development Environment)
 소스코드를 편집할 수 있는 편집기, 컴파일러, 링커, 디버그와 같이 프로그램 개발에 관련된 모든 기능을 한데 모아 놓은 프로그램
+___
 
-Function
+# Function
 명령어 묶음으로 반환 타입, 이름, 매개변수, 본체로 이루어져 있음
+___
 
-Error
+# Error
 문법적인 문제로 발생하는 오류인 컴파일 에러, 링크 과정에서 발생하는 오류인 링크 타임 에러, 실행 파일을 실행하고 나서 발생하는 오류인 런타임 에러가 있다.
-
 일반적으로 버그를 잡는 건 런타임 에러를 가리킨다. 컴파일 에러와 링크 타임 에러는 실행 파일이 만들어지기 전에 발생하기 때문
+___
 
-main()
+# main()
 운영체제와 연결되어 있으며 CPU가 실행하는 공통 지점으로 절대 이름을 바꾸면 안 됨, 일종의 엔트리 포인트로 모든 프로그램이 가지고 있는 함수
+___
 
-Solution
+# Solution
 비주얼 스튜디오는 솔루션과 프로젝트 구조로 프로그램을 관리한다. 솔루션은 여러 개의 프로젝트를 포함
+___
 
-Project
+# Project
 앱을 빌드하기 위해 필요한 모든 아이템들을 모아둔 것, 이에 대한 결과로 실행 파일이 생김
+___
+
