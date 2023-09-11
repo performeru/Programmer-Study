@@ -34,7 +34,7 @@ public:
 	vector<Item>& GetDropItems() { return mDropItems; }
 };
 
-void SaveToXML(std::string path, std::vector<Monster2>& monsters) 
+void SaveToXML(string path, vector<Monster2>& monsters) 
 {
 	using namespace tinyxml2; 
 	XMLDocument doc;
@@ -46,7 +46,7 @@ void SaveToXML(std::string path, std::vector<Monster2>& monsters)
 	doc.LinkEndChild(root);
 
 	for (auto& monster : monsters) 
-    {
+    	{
 		auto monElement = doc.NewElement("monster");
 		monElement->SetAttribute("name", monster.GetName().c_str());
 		
@@ -58,7 +58,7 @@ void SaveToXML(std::string path, std::vector<Monster2>& monsters)
 
 		auto itemsElement = doc.NewElement("items");
 		for (auto& item : monster.GetDropItems()) 
-        {
+        	{
 			auto itemElement = doc.NewElement("item");
 			itemElement->SetAttribute("name", item.mName.c_str());
 			itemElement->SetAttribute("gold", item.mGold);
@@ -72,7 +72,7 @@ void SaveToXML(std::string path, std::vector<Monster2>& monsters)
 	doc.SaveFile(path.c_str());
 }
 
-void LoadFromXML(std::string path, std::vector<Monster2>& monsters) 
+void LoadFromXML(string path, vector<Monster2>& monsters) 
 {
 	using namespace tinyxml2;
 	XMLDocument doc;
@@ -113,7 +113,7 @@ void LoadFromXML(std::string path, std::vector<Monster2>& monsters)
 
 int main() 
 {
-	std::vector<Monster2> monsters;
+	vector<Monster2> monsters;
 
 	Monster2 m;
 	m.SetName("슬라임");
@@ -140,18 +140,18 @@ int main()
 	LoadFromXML("Data/monsters.xml", monsters);
 
 	for (auto& monster : monsters) 
-    {
-        std::cout << "Monster Name: " << monster.GetName() << std::endl
+    	{
+              cout << "Monster Name: " << monster.GetName() << endl
                   << "Status - Level: " << monster.GetStatus().mLevel
                   << ", HP: " << monster.GetStatus().mHP
-                  << ", MP: " << monster.GetStatus().mMP << std::endl
-                  << "Drop Items:" << std::endl;
+                  << ", MP: " << monster.GetStatus().mMP << endl
+                  << "Drop Items:" << endl;
 
 		for (auto& item : monster.GetDropItems()) 
-        {
-			std::cout << "  Item Name: " << item.mName
-                      << ", Gold: " << item.mGold << std::endl;
+       		{
+		    cout << "  Item Name: " << item.mName
+                      << ", Gold: " << item.mGold << endl;
 		}
-		std::cout << std::endl;
+		cout << endl;
 	}
 }
