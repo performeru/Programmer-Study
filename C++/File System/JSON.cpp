@@ -48,7 +48,7 @@ bool SaveToJson(const string& path, vector<Monster>& monsters)
 	writer.Key("monsters");
 		writer.StartArray();
 		for (auto monster : monsters) 
-    {
+    		{
 			writer.StartObject();
 			{
 				writer.Key("name"); writer.String(monster.GetName().c_str());
@@ -67,7 +67,7 @@ bool SaveToJson(const string& path, vector<Monster>& monsters)
 					writer.StartArray();
 					{
 						for (auto item : monster.GetDropItem()) 
-            {
+            					{
 							writer.StartObject();
 							writer.Key("name"); writer.String(item.mName.c_str());
 							writer.Key("gold"); writer.Int(item.mGold);
@@ -81,17 +81,17 @@ bool SaveToJson(const string& path, vector<Monster>& monsters)
 		writer.EndArray();
 	writer.EndObject();
 	
-	std::ofstream ofs;
+	ofstream ofs;
 	ofs.exceptions(ofstream::badbit | ofstream::failbit);
 
 	try 
-  {
+  	{
 		ofs.open(path);
 		ofs << sb.GetString();
 		ofs.close();
 	} 
-  catch (ofstream::failure& e) 
-  {
+  	catch (ofstream::failure& e) 
+  	{
 		cerr << "invalid operatiron in SaveToJson()" << endl;
 		cerr << e.what() << endl;
 		ofs.close();
@@ -109,15 +109,15 @@ bool LoadFromJson(const string& path, vector<Monster>& monsters)
 	stringstream ss;
 
 	try 
-  {
+  	{
 		ifs.open(path);
 
 		ss << ifs.rdbuf();
 
 		ifs.close();
 	} 
-  catch (ifstream::failure& e) 
-  {
+  	catch (ifstream::failure& e) 
+  	{
 		cerr << "invalid operation in LoadFromJson()" << endl;
 		cerr << e.what() << endl;
 		ifs.close();
@@ -129,7 +129,7 @@ bool LoadFromJson(const string& path, vector<Monster>& monsters)
 	doc.Parse(ss.str().c_str());
 
 	for (auto& monObject : doc["monsters"].GetArray())
-  {
+ 	{
 		Monster monster;
 		monster.SetName(monObject["name"].GetString());
 
@@ -140,7 +140,7 @@ bool LoadFromJson(const string& path, vector<Monster>& monsters)
 		monster.SetStatus(status);
 
 		for (auto& itemObject : monObject["items"].GetArray()) 
-    {
+    		{
 			Item item;
 			item.mName = itemObject["name"].GetString();
 			item.mGold = itemObject["gold"].GetInt();
@@ -182,7 +182,7 @@ int main()
 	LoadFromJson("Data/monsters.json", monsters);
 
 	for (auto& monster : monsters) 
-  {
+  	{
 		cout << "Monster Name: " << monster.GetName() << endl
 			<< "Status - Level: " << monster.GetStatus().mLevel
 			<< ", HP: " << monster.GetStatus().mHP
@@ -190,7 +190,7 @@ int main()
 			<< "Drop Items:" << endl;
 
 		for (auto& item : monster.GetDropItem()) 
-    {
+    		{
 			cout << "  Item Name: " << item.mName
 				<< ", Gold: " << item.mGold << endl;
 		}
