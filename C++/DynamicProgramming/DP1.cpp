@@ -72,13 +72,13 @@ int FindWay(int m, int n, map<string,int>& memo)
 	}
 
 	if (m == 1 && n == 1) 
-  { 
-    return 1; 
-  }
+  	{ 
+    	    return 1; 
+  	}
 	if (!m || !n) 
-  {
-    return 0; 
-  }
+  	{
+    	    return 0; 
+  	}
 
 	memo[key] = FindWay(m - 1, n, memo) + FindWay(m, n - 1, memo);
 	return memo[key];
