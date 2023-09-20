@@ -1,15 +1,17 @@
 #include <iostream>
 #include <map>
 
-int64_t Fibonacci_memo(int n, std::map<int, int64_t>& memo) 
+using namespace std;
+
+int64_t Fibonacci_memo(int n, map<int, int64_t>& memo) 
 {
 	if (memo.count(n) == 1) 
-  {
+  	{
 		return memo[n];
 	}
 	
 	if (n <= 2)
-  {
+ 	{
 		return 1;
 	}
 
@@ -19,6 +21,6 @@ int64_t Fibonacci_memo(int n, std::map<int, int64_t>& memo)
 
 int main() 
 {
-	std::map<int, int64_t> memo;
-	std::cout << Fibonacci_memo(50, memo);
+	map<int, int64_t> memo;
+	cout << Fibonacci_memo(50, memo);
 }
