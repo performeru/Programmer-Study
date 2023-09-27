@@ -1,4 +1,7 @@
 #include <Windows.h>
+#include <sstream>
+#include <gdiplus.h>
+
 
 const wchar_t gClassName[] = L"MyWindowClass";
 
@@ -9,6 +12,10 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd)
 {
+	Gdiplus::GdiplusStartupInput gpsi;
+	ULONG_PTR gdiToken;
+	Gdiplus::GdiplusStartup(&gdiToken, &gpsi, nullptr);
+
 	WNDCLASSEX wc{};
 
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -49,12 +56,42 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
 
 	return msg.wParam;
 
+
 }
+
+void OnPaint(HWND hwnd)
+{
+	PAINTSTRUCT ps;
+	HDC hdc = BeginPaint(hwnd, &ps);
+
+	HPEN redPen = CreatePen(PS_SOLID, 1, RGB(255, 0, 0));
+	HBRUSH hatchBrush = CreateHatchBrush(HS_CROSS, RGB(255, 0, 0));
+
+	SelectObject(hdc, redPen);
+	SelectObject(hdc, hatchBrush);
+	Rectangle(hdc, 0, 0, 100, 100);
+
+	DeleteObject(hatchBrush);
+	DeleteObject(redPen);
+
+	EndPaint(hwnd, &ps);
+}
+
 
 LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
 	switch(message)
 	{
+	case WM_PAINT:
+		OnPaint(hwnd);
+		break;
+	case WM_LBUTTONDOWN:
+	{
+		int x = LOWORD(lParam);
+		int y = HIWORD(lParam);
+		OutputDebugStringA("Hello\n");
+		break;
+	}
 	case WM_CLOSE:
 		DestroyWindow(0);
 		break;
@@ -64,5 +101,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 	default:
 		return DefWindowProc(hwnd, message, wParam, lParam);
 		break;
+
 	}
 }
