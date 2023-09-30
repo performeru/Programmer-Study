@@ -1,7 +1,9 @@
-#include <Windows.h>
 #include <sstream>
+#include <Windows.h>
 #include <gdiplus.h>
 
+#pragma comment (lib, "Gdiplus.lib")
+using namespace std;
 
 const wchar_t gClassName[] = L"MyWindowClass";
 
@@ -55,8 +57,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
 	}
 
 	return msg.wParam;
-
-
 }
 
 void OnPaint(HWND hwnd)
@@ -83,8 +83,18 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 	switch(message)
 	{
 	case WM_PAINT:
+	{
 		OnPaint(hwnd);
 		break;
+	}
+	case WM_KEYDOWN:
+	{
+		std::ostringstream oss;
+
+		oss << "Virtual keycode" << wParam << endl;
+		OutputDebugStringA(oss.str().c_str());
+		break;
+	}
 	case WM_LBUTTONDOWN:
 	{
 		int x = LOWORD(lParam);
