@@ -83,8 +83,7 @@ LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lPara
 	}
 	case WM_KEYDOWN:
 	{
-		std::ostringstream oss;
-
+		ostringstream oss;
 		oss << "Virtual keycode" << wParam << endl;
 		OutputDebugStringA(oss.str().c_str());
 		break;
