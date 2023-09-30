@@ -1,8 +1,6 @@
 #include <sstream>
 #include <Windows.h>
-#include <gdiplus.h>
 
-#pragma comment (lib, "Gdiplus.lib")
 using namespace std;
 
 const wchar_t gClassName[] = L"MyWindowClass";
@@ -14,10 +12,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
 	_In_ LPSTR lpCmdLine,
 	_In_ int nShowCmd)
 {
-	Gdiplus::GdiplusStartupInput gpsi;
-	ULONG_PTR gdiToken;
-	Gdiplus::GdiplusStartup(&gdiToken, &gpsi, nullptr);
-
 	WNDCLASSEX wc{};
 
 	ZeroMemory(&wc, sizeof(WNDCLASSEX));
