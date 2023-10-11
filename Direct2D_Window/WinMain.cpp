@@ -129,13 +129,6 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
             }
         }
     }
-
-   /* while (GetMessage(&msg, NULL, 0, 0))
-    {   
-        OnPaint(hwnd);
-        TranslateMessage(&msg);
-        DispatchMessage(&msg);
-    }*/
     
     //해제
     if(gpRadiaBrush!=nullptr)
