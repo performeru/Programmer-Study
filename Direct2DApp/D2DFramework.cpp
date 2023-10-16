@@ -1,33 +1,9 @@
-#include <Windows.h>
-#include <d2d1.h>
-#include <math.h>
+#include "D2DFramework.h"
 
 #pragma comment (lib, "d2d1.lib")
 
-const wchar_t gClassName[] = L"MyWindowClass";
-
-ID2D1Factory* gpD2DFactory{};
-ID2D1HwndRenderTarget* gpRenderTarget{};
-
-ID2D1SolidColorBrush* gpBrush{};
-ID2D1RadialGradientBrush* gpRadialBrush{};
-
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
-
-void OnPaint(HWND hwnd);
-
-int WINAPI WinMain(_In_ HINSTANCE hInstance,
-    _In_opt_ HINSTANCE hPrevInstance,
-    _In_ LPSTR lpCmdLine,
-    _In_ int nShowCmd) 
+HRESULT D2DFramework::InitWindow(HINSTANCE hInstance, LPCWSTR title, UINT w, UINT h)
 {
-    HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, &gpD2DFactory);
-    if (FAILED(hr)) 
-    {
-        MessageBox(nullptr, L"Failed to Craate Factory", L"Error", MB_OK);
-        return 0;
-    }
-
     HWND hwnd;
     WNDCLASSEX wc;
     ZeroMemory(&wc, sizeof(WNDCLASSEX));
@@ -36,146 +12,123 @@ int WINAPI WinMain(_In_ HINSTANCE hInstance,
     wc.hInstance = hInstance;
     wc.hCursor = LoadCursor(NULL, IDC_ARROW);
     wc.hbrBackground = (HBRUSH)COLOR_WINDOW;
-    wc.lpfnWndProc = WindowProc;
+    wc.lpfnWndProc = D2DFramework::WndProc;
     wc.cbSize = sizeof(WNDCLASSEX);
-    if (!RegisterClassEx(&wc)) 
+    if (!RegisterClassEx(&wc))
     {
-        MessageBox(nullptr, L"Failed to register window class!", L"Error", MB_ICONEXCLAMATION | MB_OK);
-        return 0;
+        return E_FAIL;
     }
 
-    RECT wr = { 0, 0, 1024, 768 };
+    RECT wr = { 0, 0, static_cast<LONG>(w),static_cast<LONG>(h) };
     AdjustWindowRect(&wr, WS_OVERLAPPEDWINDOW, FALSE);
-    hwnd = CreateWindowEx(NULL, gClassName, L"Direct2D",
-        WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
-        wr.right - wr.left, wr.bottom - wr.top,
+    hwnd = CreateWindowEx(NULL, gClassName, title, WS_OVERLAPPEDWINDOW, CW_USEDEFAULT,
+        CW_USEDEFAULT, wr.right - wr.left, wr.bottom - wr.top,
         NULL, NULL, hInstance, NULL);
-  
-    if (hwnd == nullptr) 
+    
+    if (hwnd == nullptr)
     {
-        MessageBox(nullptr, L"Failed to create window class!", L"Error", MB_ICONEXCLAMATION | MB_OK);
-        return 0;
+        return E_FAIL;
     }
-  
-    GetClientRect(hwnd, &wr);
-    hr = gpD2DFactory->CreateHwndRenderTarget(
-        D2D1::RenderTargetProperties(),
-        D2D1::HwndRenderTargetProperties(hwnd, D2D1::SizeU(wr.right - wr.left, wr.bottom - wr.top)),
-        &gpRenderTarget
+    mHwnd = hwnd;
+
+    SetWindowLongPtr(mHwnd, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(this));
+
+    return S_OK;
+}
+
+HRESULT D2DFramework::InitD2D(HWND hwnd)
+{
+    HRESULT hr = D2D1CreateFactory(D2D1_FACTORY_TYPE_SINGLE_THREADED, mspD2DFactory.GetAddressOf());
+    ThrowIfFailed(hr);
+
+    hr = CreateDeviceResources();
+    return hr;
+}
+
+HRESULT D2DFramework::CreateDeviceResources()
+{
+    RECT wr;
+    GetClientRect(mHwnd, &wr);
+    HRESULT hr = mspD2DFactory->CreateHwndRenderTarget(D2D1::RenderTargetProperties(),
+        D2D1::HwndRenderTargetProperties(mHwnd, D2D1::SizeU(wr.right - wr.left, wr.bottom - wr.top)),
+        mspRenderTarget.ReleaseAndGetAddressOf()
     );
-    if (FAILED(hr)) 
-    {
-        MessageBox(nullptr, L"Failed to Create HWNDRenderTarget", L"Error", MB_OK);
-        return 0;
-    }
+    ThrowIfFailed(hr);
 
-    hr = gpRenderTarget->CreateSolidColorBrush(D2D1::ColorF(D2D1::ColorF::Green), &gpBrush);
+    return S_OK;
+}
 
-    D2D1_GRADIENT_STOP stops[2]
-    {
-        {0.0f, D2D1::ColorF(D2D1::ColorF::Yellow)},
-        {1.0f, D2D1::ColorF(D2D1::ColorF::Crimson)}
-    };
-    ID2D1GradientStopCollection* pGradentStops{};
-    hr = gpRenderTarget->CreateGradientStopCollection(stops, 2, &pGradentStops);
+HRESULT D2DFramework::Initialize(HINSTANCE hInstance, LPCWSTR title, UINT w, UINT h)
+{
+    ThrowIfFailed(InitWindow(hInstance, title, w, h));
+    ThrowIfFailed(InitD2D(mHwnd));
 
-    hr = gpRenderTarget->CreateRadialGradientBrush(D2D1::RadialGradientBrushProperties(D2D1::Point2F(50.0f, 150.0f),
-      D2D1::Point2F(0.0f, 0.0f), 50, 50), pGradentStops, &gpRadialBrush);
+    ShowWindow(mHwnd, SW_SHOW);
+    UpdateWindow(mHwnd);
+    return S_OK;
+}
 
-    if (pGradentStops != nullptr) 
-    {
-        pGradentStops->Release();
-        pGradentStops = nullptr;
-    }
+void D2DFramework::Release()
+{
+    mspRenderTarget.Reset();
+    mspD2DFactory.Reset();
+}
 
-    ShowWindow(hwnd, nShowCmd);
-    UpdateWindow(hwnd);
-
+int D2DFramework::GameLoop()
+{
     MSG msg;
-    while (true) 
+    while (true)
     {
-        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE)) 
+        if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
         {
             TranslateMessage(&msg);
             DispatchMessage(&msg);
 
-            if (msg.message == WM_QUIT) 
+            if (msg.message == WM_QUIT)
             {
                 break;
             }
         }
-        else 
+        else
         {
-            OnPaint(hwnd);
+            Render();
         }
-    }
-
-    if (gpRadialBrush != nullptr) 
-    {
-        gpRadialBrush->Release();
-        gpRadialBrush = nullptr;
-    }
-    if (gpBrush != nullptr) 
-    {
-        gpBrush->Release();
-        gpBrush = nullptr;
-    }
-    if (gpRenderTarget != nullptr) 
-    {
-        gpRenderTarget->Release();
-        gpRenderTarget = nullptr;
-    }
-    if (gpD2DFactory != nullptr) 
-    {
-        gpD2DFactory->Release();
-        gpD2DFactory = nullptr;
     }
 
     return static_cast<int>(msg.wParam);
 }
 
-void OnPaint(HWND hwnd) 
+void D2DFramework::Render()
 {
-    HDC hdc;
-    PAINTSTRUCT ps;
-    hdc = BeginPaint(hwnd, &ps);
+    mspRenderTarget->BeginDraw();
+    mspRenderTarget->Clear(D2D1::ColorF(0.0f, 0.2f, 0.4f, 1.0f));
+    HRESULT hr = mspRenderTarget->EndDraw();
 
-    gpRenderTarget->BeginDraw();
-    gpRenderTarget->Clear(D2D1::ColorF(0.0f, 0.2f, 0.4f, 1.0f)); 
-
-    gpBrush->SetColor(D2D1::ColorF(D2D1::ColorF::LimeGreen));
-    gpRenderTarget->FillRectangle(D2D1::RectF(0.0f, 0.0f, 100.0f, 100.0f), gpBrush);
-    gpBrush->SetColor(D2D1::ColorF(D2D1::ColorF::Blue));
-  
-    gpRenderTarget->FillRectangle(D2D1::RectF(50.0f, 50.0f, 150.0f, 150.0f), gpBrush);
-
-    static float angle = 0.0f;
-  
-    gpRenderTarget->FillEllipse(D2D1::Ellipse(D2D1::Point2F(75.0f + sinf(angle) * 25.0f, 150.0f),
-      50.0f, 50.0f), gpRadialBrush);
-
-    angle += 0.05f; 
-
-    gpRenderTarget->EndDraw();
-
-    EndPaint(hwnd, &ps);
+    if (hr == D2DERR_RECREATE_TARGET)
+    {
+        CreateDeviceResources();
+    }
 }
 
-LRESULT CALLBACK WindowProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam) 
+void D2DFramework::ShowError(LPCWSTR msg, LPCWSTR title)
 {
-    switch (message) 
+    MessageBox(nullptr, msg, title, MB_OK);
+}
+
+LRESULT D2DFramework::WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam)
+{
+    D2DFramework* pFramework = reinterpret_cast<D2DFramework*>(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+
+    switch (message)
     {
-    case WM_PAINT:
-        OnPaint(hwnd);
-        break;
-    case WM_CLOSE:
-        DestroyWindow(hwnd);
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hwnd, message, wParam, lParam);
+        case WM_CLOSE:
+            DestroyWindow(hwnd);
+            break;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+        default:
+            return DefWindowProc(hwnd, message, wParam, lParam);
     }
     return 0;
 }
